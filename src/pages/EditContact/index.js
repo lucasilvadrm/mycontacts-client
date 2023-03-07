@@ -1,8 +1,11 @@
 import React from 'react';
+import PageHeader from '../../components/PageHeader';
 
 function EditContact() {
   return (
-    <h1>EditContact</h1>
+    <PageHeader
+      title="Editar Lucas Silva"
+    />
   );
 }
 
