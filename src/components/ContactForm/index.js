@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Button from '../Button';
 import FormGroup from '../FormGroup';
@@ -7,25 +7,52 @@ import Select from '../Select';
 import { ButtonContainer, Form } from './styles';
 
 function ContactForm({ buttonLabel }) {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [category, setCategory] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log({
+      name, email, phone, category,
+    });
+  };
+
   return (
-    <Form>
+    <Form onSubmit={handleSubmit}>
       <FormGroup>
-        <Input placeholder="Nome" />
-      </FormGroup>
-
-      <FormGroup
-        error="O formato do e-mail é inválido."
-      >
-        <Input placeholder="E-mail" error />
-      </FormGroup>
-
-      <FormGroup>
-        <Input placeholder="Telefone" />
+        <Input
+          placeholder="Nome"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
       </FormGroup>
 
       <FormGroup>
-        <Select>
+        <Input
+          placeholder="E-mail"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </FormGroup>
+
+      <FormGroup>
+        <Input
+          placeholder="Telefone"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+        />
+      </FormGroup>
+
+      <FormGroup>
+        <Select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          <option value="" disabled>Selecione a categoria</option>
           <option value="instagram">Instagram</option>
+          <option value="facebook">Facebook</option>
         </Select>
       </FormGroup>
 
