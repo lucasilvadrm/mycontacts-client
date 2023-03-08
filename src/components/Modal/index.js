@@ -1,17 +1,26 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Overlay, Container, Footer } from './styles';
 import Button from '../Button';
 
-function Modal() {
+function Modal({ danger }) {
   return (
     <Overlay>
-      <Container>
+      <Container danger={danger}>
         <h1>Título do Modal</h1>
         <p>Corpo do Modal</p>
 
         <Footer>
-          <button type="button" className="cancel-button">Cancelar</button>
-          <Button type="button">
+          <button
+            type="button"
+            className="cancel-button"
+          >
+            Cancelar
+          </button>
+          <Button
+            type="button"
+            danger
+          >
             Deletar
           </Button>
         </Footer>
@@ -19,5 +28,13 @@ function Modal() {
     </Overlay>
   );
 }
+
+Modal.defaultProps = {
+  danger: false,
+};
+
+Modal.propTypes = {
+  danger: PropTypes.bool,
+};
 
 export default Modal;
