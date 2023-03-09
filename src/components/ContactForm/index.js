@@ -6,21 +6,25 @@ import Input from '../Input';
 import Select from '../Select';
 import { ButtonContainer, Form } from './styles';
 import isEmailValid from '../../utils/isEmailValid';
+import { useErrors } from '../../hooks/useErrors';
 
 function ContactForm({ buttonLabel }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [category, setCategory] = useState('');
-  const [errors, setErrors] = useState([]);
+
+  const {
+    setError, removeError, hasErrors, getErrorMessageByFieldName,
+  } = useErrors();
 
   const handleNameChange = (event) => {
     setName(event.target.value);
 
     if (!event.target.value) {
-      setErrors((prev) => [...prev, { field: 'name', message: 'Nome é obrigatório' }]);
+      setError({ field: 'name', message: 'Nome é obrigatório' });
     } else {
-      setErrors((prev) => prev.filter((error) => error.field !== 'name'));
+      removeError({ field: 'name' });
     }
   };
 
@@ -28,27 +32,14 @@ function ContactForm({ buttonLabel }) {
     setEmail(event.target.value);
 
     if (event.target.value && !isEmailValid(event.target.value)) {
-      const errorAlreadyExists = errors.find((error) => error.field === 'email');
-
-      if (errorAlreadyExists) return;
-
-      setErrors((prev) => [...prev, { field: 'email', message: 'Email inválido' }]);
+      setError({ field: 'email', message: 'Email inválido' });
     } else {
-      setErrors((prev) => prev.filter((error) => error.field !== 'email'));
+      removeError({ field: 'email' });
     }
-  };
-
-  const getErrorMessageByFieldName = (fieldName) => {
-    const foundError = errors.find((error) => error.field === fieldName);
-    return foundError?.message;
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // eslint-disable-next-line no-console
-    console.log({
-      name, email, phone, category, errors,
-    });
   };
 
   return (
@@ -91,7 +82,7 @@ function ContactForm({ buttonLabel }) {
       </FormGroup>
 
       <ButtonContainer>
-        <Button type="submit" disabled={errors.length > 0}>{buttonLabel}</Button>
+        <Button type="submit" disabled={hasErrors}>{buttonLabel}</Button>
       </ButtonContainer>
     </Form>
   );
