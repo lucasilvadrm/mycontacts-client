@@ -38,6 +38,11 @@ function ContactForm({ buttonLabel }) {
     }
   };
 
+  const getErrorMessageByFieldName = (fieldName) => {
+    const foundError = errors.find((error) => error.field === fieldName);
+    return foundError?.message;
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     // eslint-disable-next-line no-console
@@ -48,19 +53,21 @@ function ContactForm({ buttonLabel }) {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <FormGroup>
+      <FormGroup error={getErrorMessageByFieldName('name')}>
         <Input
           placeholder="Nome"
           value={name}
           onChange={handleNameChange}
+          error={!!getErrorMessageByFieldName('name')}
         />
       </FormGroup>
 
-      <FormGroup>
+      <FormGroup error={getErrorMessageByFieldName('email')}>
         <Input
           placeholder="E-mail"
           value={email}
           onChange={handleEmailChange}
+          error={!!getErrorMessageByFieldName('email')}
         />
       </FormGroup>
 
@@ -84,7 +91,7 @@ function ContactForm({ buttonLabel }) {
       </FormGroup>
 
       <ButtonContainer>
-        <Button type="submit">{buttonLabel}</Button>
+        <Button type="submit" disabled={errors.length > 0}>{buttonLabel}</Button>
       </ButtonContainer>
     </Form>
   );
