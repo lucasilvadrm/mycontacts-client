@@ -7,6 +7,8 @@ import Select from '../Select';
 import { ButtonContainer, Form } from './styles';
 import isEmailValid from '../../utils/isEmailValid';
 import { useErrors } from '../../hooks/useErrors';
+import formatPhone from '../../utils/formatPhone';
+import { MAX_LENGTH_PHONE } from '../../utils/constants';
 
 function ContactForm({ buttonLabel }) {
   const [name, setName] = useState('');
@@ -38,6 +40,16 @@ function ContactForm({ buttonLabel }) {
     }
   };
 
+  const handlePhoneChange = (event) => {
+    setPhone(formatPhone(event.target.value));
+
+    if (event.target.value && (formatPhone(event.target.value).length < MAX_LENGTH_PHONE - 1)) {
+      setError({ field: 'phone', message: 'Telefone inválido' });
+    } else {
+      removeError({ field: 'phone' });
+    }
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
   };
@@ -64,11 +76,13 @@ function ContactForm({ buttonLabel }) {
         />
       </FormGroup>
 
-      <FormGroup>
+      <FormGroup error={getErrorMessageByFieldName('phone')}>
         <Input
           placeholder="Telefone"
+          maxLength={MAX_LENGTH_PHONE}
           value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          onChange={handlePhoneChange}
+          error={!!getErrorMessageByFieldName('phone')}
         />
       </FormGroup>
 
