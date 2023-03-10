@@ -9,6 +9,7 @@ import {
 import arrow from '../../assets/images/icons/arrow.svg';
 import edit from '../../assets/images/icons/edit.svg';
 import trash from '../../assets/images/icons/trash.svg';
+import Loader from '../../components/Loader';
 
 function Home() {
   const [contacts, setContacts] = useState([]);
@@ -22,11 +23,11 @@ function Home() {
         setContacts(data);
         setLoading(false);
       })
-      // eslint-disable-next-line no-console
+    // eslint-disable-next-line no-console
       .catch((error) => console.log(error));
   }, []);
 
-  if (loading) return <h1>Carregando</h1>;
+  if (loading) return <Loader />;
 
   return (
     <Container>
@@ -34,7 +35,11 @@ function Home() {
         <input type="text" placeholder="Pesquisar contato..." />
       </InputSearchContainer>
       <Header>
-        <strong>3 Contatos</strong>
+        <strong>
+          {contacts.length}
+          {' '}
+          {contacts.length === 1 ? 'Contato' : 'Contatos'}
+        </strong>
         <Link to="/new">Novo Contato</Link>
       </Header>
 
@@ -46,19 +51,19 @@ function Home() {
           </button>
         </header>
 
-        {contacts?.map((contact) => (
+        {contacts.map((contact) => (
           <Card key={contact.id}>
             <div className="info">
               <div className="contact-name">
                 <strong>{contact.name}</strong>
-                <small>{contact.category_name}</small>
+                {contact.category_name && <small>{contact.category_name}</small>}
               </div>
               <span>{contact.email}</span>
               <span>{contact.phone}</span>
             </div>
 
             <div className="actions">
-              <Link to="/edit/123edit/123">
+              <Link to={`/edit/${contact.id}`}>
                 <img src={edit} alt="Edit" />
               </Link>
               <button type="button">
@@ -73,10 +78,3 @@ function Home() {
 }
 
 export default Home;
-
-// fetch('http://localhost:3333/contacts')
-//   .then(async (response) => {
-//     const json = await response.json();
-//     console.log(json);
-//   })
-//   .catch((error) => console.log(error));
