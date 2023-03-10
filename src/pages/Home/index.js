@@ -13,6 +13,10 @@ import trash from '../../assets/images/icons/trash.svg';
 function Home() {
   const [contacts, setContacts] = useState([]);
   const [orderBy, setOrderBy] = useState('asc');
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // eslint-disable-next-line max-len
+  const filteredContacts = contacts.filter(({ name }) => (name.toLowerCase().includes(searchTerm.toLowerCase())));
 
   useEffect(() => {
     fetch(`http://localhost:3333/contacts?orderBy=${orderBy}`)
@@ -28,20 +32,30 @@ function Home() {
     setOrderBy((prev) => (prev === 'asc' ? 'desc' : 'asc'));
   };
 
+  const handleChangeSearchTerm = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
   return (
     <Container>
       <InputSearchContainer>
-        <input type="text" placeholder="Pesquisar contato..." />
+        <input
+          value={searchTerm}
+          type="text"
+          placeholder="Pesquisar contato..."
+          onChange={handleChangeSearchTerm}
+        />
       </InputSearchContainer>
       <Header>
         <strong>
-          {contacts.length}
+          {filteredContacts.length}
           {' '}
-          {contacts.length === 1 ? 'Contato' : 'Contatos'}
+          {filteredContacts.length === 1 ? 'Contato' : 'Contatos'}
         </strong>
         <Link to="/new">Novo Contato</Link>
       </Header>
 
+      {filteredContacts.length > 0 && (
       <ListHeader order={orderBy}>
         <button type="button" onClick={handleToggleOrderBy}>
           <span>
@@ -50,8 +64,9 @@ function Home() {
           <img src={arrow} alt="Arrow" />
         </button>
       </ListHeader>
+      )}
 
-      {contacts.map((contact) => (
+      {filteredContacts.map((contact) => (
         <Card key={contact.id}>
           <div className="info">
             <div className="contact-name">
