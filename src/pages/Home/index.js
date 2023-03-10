@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   InputSearchContainer,
@@ -16,7 +16,10 @@ function Home() {
   const [searchTerm, setSearchTerm] = useState('');
 
   // eslint-disable-next-line max-len
-  const filteredContacts = contacts.filter(({ name }) => (name.toLowerCase().includes(searchTerm.toLowerCase())));
+  const filteredContacts = useMemo(
+    () => contacts.filter(({ name }) => (name.toLowerCase().includes(searchTerm.toLowerCase()))),
+    [contacts, searchTerm],
+  );
 
   useEffect(() => {
     fetch(`http://localhost:3333/contacts?orderBy=${orderBy}`)
