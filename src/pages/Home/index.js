@@ -6,14 +6,18 @@ import {
   Container, Header, ListHeader,
 } from './styles';
 
+import Loader from '../../components/Loader';
+
 import arrow from '../../assets/images/icons/arrow.svg';
 import edit from '../../assets/images/icons/edit.svg';
 import trash from '../../assets/images/icons/trash.svg';
+import { delay } from '../../utils/delay';
 
 function Home() {
   const [contacts, setContacts] = useState([]);
   const [orderBy, setOrderBy] = useState('asc');
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
 
   // eslint-disable-next-line max-len
   const filteredContacts = useMemo(
@@ -22,13 +26,18 @@ function Home() {
   );
 
   useEffect(() => {
+    setLoading(true);
     fetch(`http://localhost:3333/contacts?orderBy=${orderBy}`)
       .then(async (response) => {
+        await delay(1000);
         const data = await response.json();
         setContacts(data);
       })
     // eslint-disable-next-line no-console
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error))
+      .finally(() => {
+        setLoading(false);
+      });
   }, [orderBy]);
 
   const handleToggleOrderBy = () => {
@@ -41,6 +50,7 @@ function Home() {
 
   return (
     <Container>
+      <Loader isLoading={loading} />
       <InputSearchContainer>
         <input
           value={searchTerm}
