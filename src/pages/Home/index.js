@@ -26,18 +26,19 @@ function Home() {
   );
 
   useEffect(() => {
-    setLoading(true);
-    fetch(`http://localhost:3333/contacts?orderBy=${orderBy}`)
-      .then(async (response) => {
+    (async function loadContacts() {
+      try {
+        setLoading(true);
         await delay(1000);
-        const data = await response.json();
+        const data = await (await fetch(`http://localhost:3333/contacts?orderBy=${orderBy}`)).json();
         setContacts(data);
-      })
-    // eslint-disable-next-line no-console
-      .catch((error) => console.log(error))
-      .finally(() => {
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error);
+      } finally {
         setLoading(false);
-      });
+      }
+    }());
   }, [orderBy]);
 
   const handleToggleOrderBy = () => {
