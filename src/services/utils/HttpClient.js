@@ -10,11 +10,19 @@ class HttpClient {
 
     const response = await fetch(`${this.baseURL}${path}`);
 
-    if (response.ok) { // range 200-299
-      return response.json();
+    let body = null;
+    const contentType = response.headers.get('Content-Type');
+
+    if (contentType.includes('application/json')) {
+      body = await response.json();
     }
 
-    throw new Error(`${response.status} - ${response.statusText}`);
+    if (response.ok) { // range 200-299
+      return body;
+    }
+
+    // colocando a responsabilidade de exibir o erro na chamada a API
+    throw new Error(body?.error || `${response.status} - ${response.statusText}`);
   }
 }
 
