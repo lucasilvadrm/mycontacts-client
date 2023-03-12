@@ -31,6 +31,7 @@ function Home() {
       try {
         setLoading(true);
         const contactsList = await ContactsService.listContacts(orderBy);
+
         setContacts(contactsList);
       } catch (error) {
         // eslint-disable-next-line no-console

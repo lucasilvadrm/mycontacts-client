@@ -6,9 +6,15 @@ class HttpClient {
   }
 
   async get(path) {
-    const response = await fetch(`${this.baseURL}${path}`);
     await delay(1000);
-    return response.json();
+
+    const response = await fetch(`${this.baseURL}${path}`);
+
+    if (response.ok) { // range 200-299
+      return response.json();
+    }
+
+    throw new Error(`${response.status} - ${response.statusText}`);
   }
 }
 
