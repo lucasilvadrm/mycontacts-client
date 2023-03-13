@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 import React, {
   useCallback, useEffect, useMemo, useState,
 } from 'react';
@@ -9,6 +10,7 @@ import {
   Header,
   ListHeader,
   ErrorContainer,
+  EmptyListContainer,
 } from './styles';
 
 import Loader from '../../components/Loader';
@@ -18,6 +20,7 @@ import arrow from '../../assets/images/icons/arrow.svg';
 import edit from '../../assets/images/icons/edit.svg';
 import trash from '../../assets/images/icons/trash.svg';
 import sad from '../../assets/images/sad.svg';
+import emptyBox from '../../assets/images/empty-box.svg';
 
 import ContactsService from '../../services/ContactsService';
 
@@ -38,6 +41,7 @@ function Home() {
     try {
       setLoading(true);
       const contactsList = await ContactsService.listContacts(orderBy);
+      // const contactsList = []; await ContactsService.listContacts(orderBy);
 
       setHasError(false);
       setContacts(contactsList);
@@ -67,16 +71,21 @@ function Home() {
   return (
     <Container>
       <Loader isLoading={loading} />
-      <InputSearchContainer>
-        <input
-          value={searchTerm}
-          type="text"
-          placeholder="Pesquisar contato..."
-          onChange={handleChangeSearchTerm}
-        />
-      </InputSearchContainer>
-      <Header hasError={hasError}>
-        {!hasError && (
+      {contacts.length > 0 && (
+        <InputSearchContainer>
+          <input
+            value={searchTerm}
+            type="text"
+            placeholder="Pesquisar contato..."
+            onChange={handleChangeSearchTerm}
+          />
+        </InputSearchContainer>
+      )}
+      <Header
+        hasError={hasError}
+        noContacts={contacts.length === 0}
+      >
+        {(!hasError && contacts.length > 0) && (
           <strong>
             {filteredContacts.length}
             {' '}
@@ -107,6 +116,17 @@ function Home() {
               <img src={arrow} alt="Arrow" />
             </button>
           </ListHeader>
+          )}
+
+          {(contacts.length < 1 && !loading) && (
+            <EmptyListContainer>
+              <img src={emptyBox} alt="Empty Box" />
+              <p>
+                Você ainda não tem nenhum contato cadastrado!
+                Clique no botão <strong>”Novo contato” </strong>
+                à cima para cadastrar o seu primeiro!
+              </p>
+            </EmptyListContainer>
           )}
 
           {filteredContacts.map((contact) => (
