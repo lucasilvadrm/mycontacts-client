@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react/jsx-one-expression-per-line */
 import React, {
   useCallback, useEffect, useMemo, useState,
@@ -82,8 +83,13 @@ function Home() {
         </InputSearchContainer>
       )}
       <Header
-        hasError={hasError}
-        noContacts={contacts.length === 0}
+        justifyContent={
+          hasError
+            ? 'flex-end'
+            : (
+              contacts.length > 0 ? 'space-between' : 'center'
+            )
+        }
       >
         {(!hasError && contacts.length > 0) && (
           <strong>

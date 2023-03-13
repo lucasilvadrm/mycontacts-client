@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 export const Container = styled.div`
   margin-top: 32px;
@@ -26,7 +26,7 @@ export const InputSearchContainer = styled.div`
 
 export const Header = styled.header`
   display: flex;
-  justify-content: ${({ hasError }) => (hasError ? 'flex-end' : 'space-between')};
+  justify-content: ${({ justifyContent }) => justifyContent};
   align-items: center;
   margin-top: 32px;
   border-bottom: 2px solid ${({ theme }) => theme.colors.gray[100]};
@@ -52,10 +52,6 @@ export const Header = styled.header`
       color: #fff;
     }
   }
-
-  ${({ noContacts }) => noContacts && css`
-    justify-content: center;
-  `}
 `;
 
 export const ListHeader = styled.header`
