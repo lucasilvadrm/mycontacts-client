@@ -10,7 +10,6 @@ import { useErrors } from '../../hooks/useErrors';
 import formatPhone from '../../utils/formatPhone';
 import { MAX_LENGTH_PHONE } from '../../utils/constants';
 import CategoriesService from '../../services/CategoriesService';
-import Loader from '../Loader';
 
 function ContactForm({ buttonLabel }) {
   const [name, setName] = useState('');
@@ -18,7 +17,7 @@ function ContactForm({ buttonLabel }) {
   const [phone, setPhone] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
 
   const {
     setError, removeError, hasErrors, getErrorMessageByFieldName,
@@ -28,14 +27,11 @@ function ContactForm({ buttonLabel }) {
 
   const loadCategories = useCallback(async () => {
     try {
-      setLoading(true);
+      setIsLoadingCategories(true);
       const categoriesList = await CategoriesService.listCategories();
       setCategories(categoriesList);
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error);
-    } finally {
-      setLoading(false);
+    } catch {} finally {
+      setIsLoadingCategories(false);
     }
   }, []);
 
@@ -79,7 +75,6 @@ function ContactForm({ buttonLabel }) {
 
   return (
     <Form onSubmit={handleSubmit} noValidate>
-      {loading && <Loader isLoading={loading} />}
       <FormGroup error={getErrorMessageByFieldName('name')}>
         <Input
           type="text"
@@ -110,10 +105,11 @@ function ContactForm({ buttonLabel }) {
         />
       </FormGroup>
 
-      <FormGroup>
+      <FormGroup isLoading={isLoadingCategories}>
         <Select
           value={categoryId}
           onChange={(e) => setCategoryId(e.target.value)}
+          disabled={isLoadingCategories}
         >
           <option value="">Sem categoria</option>
           {categories.map((category) => (
