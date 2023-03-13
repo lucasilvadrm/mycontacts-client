@@ -12,6 +12,7 @@ import {
   ListHeader,
   ErrorContainer,
   EmptyListContainer,
+  SearchNotFoundContainer,
 } from './styles';
 
 import Loader from '../../components/Loader';
@@ -22,6 +23,7 @@ import edit from '../../assets/images/icons/edit.svg';
 import trash from '../../assets/images/icons/trash.svg';
 import sad from '../../assets/images/sad.svg';
 import emptyBox from '../../assets/images/empty-box.svg';
+import magnifierQuestion from '../../assets/images/magnifier-question.svg';
 
 import ContactsService from '../../services/ContactsService';
 
@@ -113,6 +115,15 @@ function Home() {
 
       {!hasError && (
         <>
+          {(contacts.length > 0 && filteredContacts.length < 1 && !loading) && (
+            <SearchNotFoundContainer>
+              <img src={magnifierQuestion} alt="Magnifier Question" />
+              <p>
+                Nenhum resultado foi encontrado para <strong>”{searchTerm}”</strong>.
+              </p>
+            </SearchNotFoundContainer>
+          )}
+
           {filteredContacts.length > 0 && (
           <ListHeader order={orderBy}>
             <button type="button" onClick={handleToggleOrderBy}>
