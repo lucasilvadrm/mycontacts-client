@@ -3,14 +3,19 @@ import { Link } from 'react-router-dom';
 import {
   InputSearchContainer,
   Card,
-  Container, Header, ListHeader,
+  Container,
+  Header,
+  ListHeader,
+  ErrorContainer,
 } from './styles';
 
 import Loader from '../../components/Loader';
+import Button from '../../components/Button';
 
 import arrow from '../../assets/images/icons/arrow.svg';
 import edit from '../../assets/images/icons/edit.svg';
 import trash from '../../assets/images/icons/trash.svg';
+import sad from '../../assets/images/sad.svg';
 
 import ContactsService from '../../services/ContactsService';
 
@@ -19,6 +24,7 @@ function Home() {
   const [orderBy, setOrderBy] = useState('asc');
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
 
   // eslint-disable-next-line max-len
   const filteredContacts = useMemo(
@@ -34,8 +40,7 @@ function Home() {
 
         setContacts(contactsList);
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.log(error);
+        setHasError(true);
       } finally {
         setLoading(false);
       }
@@ -61,14 +66,26 @@ function Home() {
           onChange={handleChangeSearchTerm}
         />
       </InputSearchContainer>
-      <Header>
-        <strong>
-          {filteredContacts.length}
-          {' '}
-          {filteredContacts.length === 1 ? 'Contato' : 'Contatos'}
-        </strong>
+      <Header hasError={hasError}>
+        {!hasError && (
+          <strong>
+            {filteredContacts.length}
+            {' '}
+            {filteredContacts.length === 1 ? 'Contato' : 'Contatos'}
+          </strong>
+        )}
         <Link to="/new">Novo Contato</Link>
       </Header>
+
+      {hasError && (
+        <ErrorContainer>
+          <img src={sad} alt="Sad" />
+          <div className="details">
+            <span>Ocorreu um erro ao obter os seus contatos!</span>
+            <Button>Tentar novamente</Button>
+          </div>
+        </ErrorContainer>
+      )}
 
       {filteredContacts.length > 0 && (
       <ListHeader order={orderBy}>
