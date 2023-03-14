@@ -11,7 +11,7 @@ import formatPhone from '../../utils/formatPhone';
 import { MAX_LENGTH_PHONE } from '../../utils/constants';
 import CategoriesService from '../../services/CategoriesService';
 
-function ContactForm({ buttonLabel }) {
+function ContactForm({ buttonLabel, onSubmit }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -71,10 +71,16 @@ function ContactForm({ buttonLabel }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    onSubmit({
+      name, email, phone, categoryId,
+    });
   };
 
   return (
-    <Form onSubmit={handleSubmit} noValidate>
+    <Form
+      onSubmit={handleSubmit}
+      noValidate
+    >
       <FormGroup error={getErrorMessageByFieldName('name')}>
         <Input
           type="text"
@@ -132,6 +138,7 @@ function ContactForm({ buttonLabel }) {
 
 ContactForm.propTypes = {
   buttonLabel: PropTypes.string.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default ContactForm;

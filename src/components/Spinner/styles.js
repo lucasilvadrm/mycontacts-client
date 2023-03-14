@@ -34,6 +34,7 @@ const round = keyframes`
   }
 `;
 
+// deixando a responsabilidade de posicionamento com o componente que chamar o spinner.
 export const StyledSpinner = styled.div`
   color: ${({ theme }) => theme.colors.primary.main};
   font-size: ${({ size }) => `${size}px`};
