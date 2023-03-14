@@ -13,6 +13,7 @@ function NewContact() {
         category_id: formData.categoryId,
       };
       const response = await ContactsService.createContact(contact);
+      alert('cadastro realizado com sucesso!');
       console.log({ response });
     } catch {
       alert('Erro ao cadastrar contato.');
