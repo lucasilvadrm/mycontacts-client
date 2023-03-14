@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { toastEventManager } from '../../../utils/toast';
 import ToastMessage from '../ToastMessage';
 import { Container } from './styles';
 
@@ -6,14 +7,14 @@ function ToastContainer() {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    const handleAddToast = (event) => {
-      setMessages((prev) => [...prev, { id: Math.random(), ...event.detail }]);
+    const handleAddToast = ({ type, text }) => {
+      setMessages((prev) => [...prev, { id: Math.random(), type, text }]);
     };
 
-    document.addEventListener('addtoast', handleAddToast);
+    toastEventManager.on('addtoast', handleAddToast);
 
     return () => {
-      document.removeEventListener('addtoast', handleAddToast);
+      toastEventManager.removeListener('addtoast', handleAddToast);
     };
   }, []);
 
