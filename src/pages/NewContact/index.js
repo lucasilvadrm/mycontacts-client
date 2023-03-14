@@ -2,7 +2,7 @@ import React from 'react';
 import ContactForm from '../../components/ContactForm';
 import PageHeader from '../../components/PageHeader';
 import ContactsService from '../../services/ContactsService';
-import toast from '../../services/utils/toast';
+import toast from '../../utils/toast';
 
 function NewContact() {
   const handleSubmit = async (formData) => {
