@@ -1,14 +1,31 @@
-// import PropTypes from 'prop-types';
-
+import { useState, useEffect } from 'react';
 import ToastMessage from '../ToastMessage';
 import { Container } from './styles';
 
 function ToastContainer() {
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    const handleAddToast = (event) => {
+      setMessages((prev) => [...prev, { id: Math.random(), ...event.detail }]);
+    };
+
+    document.addEventListener('addtoast', handleAddToast);
+
+    return () => {
+      document.removeEventListener('addtoast', handleAddToast);
+    };
+  }, []);
+
   return (
     <Container>
-      <ToastMessage text="Default Toast" />
-      <ToastMessage text="Error Toast" type="danger" />
-      <ToastMessage text="Success Toast" type="success" />
+      {messages.map((message) => (
+        <ToastMessage
+          key={message.id}
+          type={message.type}
+          text={message.text}
+        />
+      ))}
     </Container>
   );
 }
