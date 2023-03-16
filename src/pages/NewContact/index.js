@@ -18,6 +18,7 @@ function NewContact() {
       toast({
         type: 'success',
         text: 'Cadastro realizado com sucesso!',
+        duration: 3000,
       });
     } catch {
       toast({
