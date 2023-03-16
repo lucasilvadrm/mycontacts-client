@@ -71,12 +71,12 @@ function ContactForm({ buttonLabel, onSubmit }) {
     }
   };
 
-  // const clearFields = () => {
-  //   setName('');
-  //   setEmail('');
-  //   setPhone('');
-  //   setCategoryId('');
-  // };
+  const clearFields = () => {
+    setName('');
+    setEmail('');
+    setPhone('');
+    setCategoryId('');
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -88,7 +88,7 @@ function ContactForm({ buttonLabel, onSubmit }) {
     });
 
     setIsSubmitting(false);
-    // clearFields();
+    clearFields();
   };
 
   return (
