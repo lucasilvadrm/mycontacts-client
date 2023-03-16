@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { useState, useEffect } from 'react';
 import { toastEventManager } from '../../../utils/toast';
 import ToastMessage from '../ToastMessage';
@@ -18,13 +19,17 @@ function ToastContainer() {
     };
   }, []);
 
+  const handleRemoveMessage = (messageId) => {
+    setMessages((prev) => prev.filter((message) => message.id !== messageId));
+  };
+
   return (
     <Container>
       {messages.map((message) => (
         <ToastMessage
+          onRemoveMessage={handleRemoveMessage}
           key={message.id}
-          type={message.type}
-          text={message.text}
+          message={message}
         />
       ))}
     </Container>
