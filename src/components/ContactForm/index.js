@@ -1,4 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  useCallback, useEffect, useState, forwardRef, useImperativeHandle,
+} from 'react';
 import PropTypes from 'prop-types';
 import { ButtonContainer, Form } from './styles';
 import isEmailValid from '../../utils/isEmailValid';
@@ -12,7 +14,7 @@ import FormGroup from '../FormGroup';
 import Input from '../Input';
 import Select from '../Select';
 
-function ContactForm({ buttonLabel, onSubmit }) {
+const ContactForm = forwardRef(({ buttonLabel, onSubmit }, ref) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -24,6 +26,16 @@ function ContactForm({ buttonLabel, onSubmit }) {
   const {
     setError, removeError, hasErrors, getErrorMessageByFieldName,
   } = useErrors();
+
+  // o retorno será atribuído ao current
+  useImperativeHandle(ref, () => ({
+    setFieldsValues: (contact) => {
+      setName(contact.name);
+      setEmail(contact.email || '');
+      setPhone(contact.phone || '');
+      setCategoryId(contact.category_id || '');
+    },
+  }), []);
 
   const isValidForm = !hasErrors && name;
 
@@ -158,7 +170,7 @@ function ContactForm({ buttonLabel, onSubmit }) {
       </ButtonContainer>
     </Form>
   );
-}
+});
 
 ContactForm.propTypes = {
   buttonLabel: PropTypes.string.isRequired,
