@@ -30,10 +30,10 @@ const ContactForm = forwardRef(({ buttonLabel, onSubmit }, ref) => {
   // o retorno será atribuído ao current
   useImperativeHandle(ref, () => ({
     setFieldsValues: (contact) => {
-      setName(contact.name);
-      setEmail(contact.email || '');
-      setPhone(contact.phone || '');
-      setCategoryId(contact.category_id || '');
+      setName(contact.name ?? '');
+      setEmail(contact.email ?? '');
+      setPhone(formatPhone(contact.phone) ?? '');
+      setCategoryId(contact.category_id ?? '');
     },
   }), []);
 
