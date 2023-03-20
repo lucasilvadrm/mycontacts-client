@@ -83,12 +83,12 @@ const ContactForm = forwardRef(({ buttonLabel, onSubmit }, ref) => {
     }
   };
 
-  const clearFields = () => {
-    setName('');
-    setEmail('');
-    setPhone('');
-    setCategoryId('');
-  };
+  // const clearFields = () => {
+  //   setName('');
+  //   setEmail('');
+  //   setPhone('');
+  //   setCategoryId('');
+  // };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -100,7 +100,7 @@ const ContactForm = forwardRef(({ buttonLabel, onSubmit }, ref) => {
     });
 
     setIsSubmitting(false);
-    clearFields();
+    // clearFields();
   };
 
   return (
