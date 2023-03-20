@@ -35,6 +35,12 @@ const ContactForm = forwardRef(({ buttonLabel, onSubmit }, ref) => {
       setPhone(formatPhone(contact.phone) ?? '');
       setCategoryId(contact.category_id ?? '');
     },
+    resetFields: () => {
+      setName('');
+      setEmail('');
+      setPhone('');
+      setCategoryId('');
+    },
   }), []);
 
   const isValidForm = !hasErrors && name;
@@ -84,10 +90,10 @@ const ContactForm = forwardRef(({ buttonLabel, onSubmit }, ref) => {
   };
 
   // const clearFields = () => {
-  //   setName('');
-  //   setEmail('');
-  //   setPhone('');
-  //   setCategoryId('');
+  // setName('');
+  // setEmail('');
+  // setPhone('');
+  // setCategoryId('');
   // };
 
   const handleSubmit = async (event) => {
