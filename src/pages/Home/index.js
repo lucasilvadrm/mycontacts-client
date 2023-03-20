@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/jsx-one-expression-per-line */
 import React, {
@@ -24,6 +25,7 @@ import trash from '../../assets/images/icons/trash.svg';
 import sad from '../../assets/images/sad.svg';
 import emptyBox from '../../assets/images/empty-box.svg';
 import magnifierQuestion from '../../assets/images/magnifier-question.svg';
+import Modal from '../../components/Modal';
 
 import ContactsService from '../../services/ContactsService';
 
@@ -33,6 +35,8 @@ function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [contactBeingDeleted, setContactBeingDeleted] = useState(null);
 
   // eslint-disable-next-line max-len
   const filteredContacts = useMemo(
@@ -44,7 +48,6 @@ function Home() {
     try {
       setLoading(true);
       const contactsList = await ContactsService.listContacts(orderBy);
-      // const contactsList = []; await ContactsService.listContacts(orderBy);
 
       setHasError(false);
       setContacts(contactsList);
@@ -71,9 +74,39 @@ function Home() {
     loadContacts();
   };
 
+  const handleDeleteContact = (contact) => {
+    setContactBeingDeleted(contact);
+    setIsDeleteModalVisible(true);
+    // loadContacts();
+  };
+
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalVisible(false);
+  };
+
+  const handleDeleteContactAfterConfirmation = async () => {
+    try {
+      await ContactsService.deleteContact(contactBeingDeleted.id);
+      loadContacts();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Container>
       <Loader isLoading={loading} />
+      <Modal
+        danger
+        visible={isDeleteModalVisible}
+        title={`Tem certeza que deseja remover o contato ${contactBeingDeleted?.name}?`}
+        cancelLabel="Cancelar"
+        confirmLabel="Deletar"
+        onCancel={handleCloseDeleteModal}
+        onConfirm={handleDeleteContactAfterConfirmation}
+      >
+        <p>Esta ação não pode ser desfeita!</p>
+      </Modal>
       {contacts.length > 0 && (
         <InputSearchContainer>
           <input
@@ -161,7 +194,10 @@ function Home() {
                 <Link to={`/edit/${contact.id}`}>
                   <img src={edit} alt="Edit" />
                 </Link>
-                <button type="button">
+                <button
+                  type="button"
+                  onClick={() => handleDeleteContact(contact)}
+                >
                   <img src={trash} alt="Trash" />
                 </button>
               </div>
