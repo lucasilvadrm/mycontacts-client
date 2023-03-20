@@ -26,6 +26,7 @@ import sad from '../../assets/images/sad.svg';
 import emptyBox from '../../assets/images/empty-box.svg';
 import magnifierQuestion from '../../assets/images/magnifier-question.svg';
 import Modal from '../../components/Modal';
+import toast from '../../utils/toast';
 
 import ContactsService from '../../services/ContactsService';
 
@@ -37,6 +38,7 @@ function Home() {
   const [hasError, setHasError] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [contactBeingDeleted, setContactBeingDeleted] = useState(null);
+  const [isLoadingDelete, setIsLoadingDelete] = useState(false);
 
   // eslint-disable-next-line max-len
   const filteredContacts = useMemo(
@@ -77,19 +79,35 @@ function Home() {
   const handleDeleteContact = (contact) => {
     setContactBeingDeleted(contact);
     setIsDeleteModalVisible(true);
-    // loadContacts();
   };
 
   const handleCloseDeleteModal = () => {
     setIsDeleteModalVisible(false);
+    setContactBeingDeleted(null);
   };
 
   const handleDeleteContactAfterConfirmation = async () => {
     try {
+      setIsLoadingDelete(true);
       await ContactsService.deleteContact(contactBeingDeleted.id);
-      loadContacts();
-    } catch (error) {
-      console.log(error);
+
+      setContacts((prev) => prev.filter(
+        (contact) => contact.id !== contactBeingDeleted.id,
+      ));
+
+      handleCloseDeleteModal();
+
+      toast({
+        type: 'success',
+        text: 'Contato excluído com sucesso!',
+      });
+    } catch {
+      toast({
+        type: 'danger',
+        text: 'Erro ao excluir contato!',
+      });
+    } finally {
+      setIsLoadingDelete(false);
     }
   };
 
@@ -98,6 +116,7 @@ function Home() {
       <Loader isLoading={loading} />
       <Modal
         danger
+        isLoading={isLoadingDelete}
         visible={isDeleteModalVisible}
         title={`Tem certeza que deseja remover o contato ${contactBeingDeleted?.name}?`}
         cancelLabel="Cancelar"
