@@ -2,6 +2,7 @@ class ContactMapper {
   // recebe um objeto no formato do domain e retorna um objeto no formato da persistência
   toPersistence(domainContact) {
     return {
+      id: domainContact.id,
       name: domainContact.name,
       email: domainContact.email,
       phone: domainContact.phone,
