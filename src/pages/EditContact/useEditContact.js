@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import ContactsService from '../../services/ContactsService';
 import toast from '../../utils/toast';
 import useSafeAsyncAction from '../../hooks/useSafeAsyncAction';
-import Presentation from './Presentation';
 
-function Container() {
+export default function useEditContact() {
   const { id } = useParams();
   const history = useHistory();
   const safeAsyncAction = useSafeAsyncAction();
@@ -58,14 +57,10 @@ function Container() {
     }
   };
 
-  return (
-    <Presentation
-      contactFormRef={contactFormRef}
-      contactName={contactName}
-      isLoading={isLoading}
-      onSubmit={handleSubmit}
-    />
-  );
+  return {
+    isLoading,
+    contactName,
+    contactFormRef,
+    handleSubmit,
+  };
 }
-
-export default Container;
