@@ -2,15 +2,18 @@ import PropTypes from 'prop-types';
 import { Overlay } from './styles';
 import Spinner from '../Spinner';
 import ReactPortal from '../ReactPortal';
+import useAnimatedUnmout from '../../hooks/useAnimatedUnmout';
 
 function Loader({ isLoading }) {
-  if (!isLoading) {
+  const { shouldRender, animatedElementRef } = useAnimatedUnmout({ visible: isLoading });
+
+  if (!shouldRender) {
     return null;
   }
 
   return (
     <ReactPortal containerId="loader-root">
-      <Overlay>
+      <Overlay isLeaving={!isLoading} ref={animatedElementRef}>
         <Spinner size={90} />
       </Overlay>
       ,
