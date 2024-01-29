@@ -36,11 +36,19 @@ function Home() {
     handleDeleteContact,
   } = useHome();
 
+  const hasContacts = !hasError && contacts.length > 0;
+  const isListEmpty = !hasError && (!loading && !hasContacts);
+  const isSearchEmpty = !hasError && (hasContacts && filteredContacts.length < 1 && !loading);
+
   return (
     <Container>
       <Loader isLoading={loading} />
-      {contacts.length > 0 && (
-        <InputSearch value={searchTerm} onChange={handleChangeSearchTerm} />
+
+      {hasContacts && (
+        <InputSearch
+          value={searchTerm}
+          onChange={handleChangeSearchTerm}
+        />
       )}
 
       <Header
@@ -50,12 +58,11 @@ function Home() {
       />
 
       {hasError && <ErrorStatus onTryAgain={handleTryAgain} />}
+      {isListEmpty && <EmptyList />}
+      {isSearchEmpty && <SearchNotFound searchTerm={searchTerm} />}
 
-      {!hasError && (
+      {hasContacts && (
         <>
-          {(contacts.length > 0 && filteredContacts.length < 1 && !loading) && (
-            <SearchNotFound searchTerm={searchTerm} />
-          )}
           <ContactsList
             filteredContacts={filteredContacts}
             orderBy={orderBy}
@@ -74,7 +81,6 @@ function Home() {
           >
             <p>Esta ação não pode ser desfeita!</p>
           </Modal>
-          {(contacts.length < 1 && !loading) && <EmptyList />}
         </>
       )}
     </Container>
