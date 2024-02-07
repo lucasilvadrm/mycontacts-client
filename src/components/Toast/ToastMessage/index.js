@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useEffect, memo } from 'react';
 import { Container } from './styles';
 
 import xCircleIcon from '../../../assets/images/icons/x-circle.svg';
@@ -50,4 +50,5 @@ ToastMessage.propTypes = {
   animatedRef: PropTypes.shape().isRequired,
 };
 
-export default ToastMessage;
+export default memo(ToastMessage);
+// o memo faz com que a listagem gere nova renderização apenas se alguma das propriedades mudar.
