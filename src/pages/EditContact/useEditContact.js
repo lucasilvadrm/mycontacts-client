@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import ContactsService from '../../services/ContactsService';
 import toast from '../../utils/toast';
 import useSafeAsyncAction from '../../hooks/useSafeAsyncAction';
 
 export default function useEditContact() {
   const { id } = useParams();
-  const history = useHistory();
+  const navigate = useNavigate();
   const safeAsyncAction = useSafeAsyncAction();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -32,7 +32,8 @@ export default function useEditContact() {
         }
 
         safeAsyncAction(() => {
-          history.push('/');
+          // usando replace para não voltar para uma página que não obteve êxito ao tentar acessá-la
+          navigate('/', { replace: true });
           toast({
             type: 'danger',
             text: 'Contato não encontrado!',
@@ -46,7 +47,7 @@ export default function useEditContact() {
     return () => {
       controller.abort();
     };
-  }, [history, id, safeAsyncAction]);
+  }, [navigate, id, safeAsyncAction]);
 
   const handleSubmit = async (contact) => {
     try {
